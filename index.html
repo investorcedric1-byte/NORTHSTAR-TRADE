@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Northstar Trade</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2d;--line:#26334d;--text:#e9efff;--muted:#91a0bd;--green:#35d39a;--red:#ff6d83;--blue:#7b9cff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.shell{max-width:1400px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7b9cff,#35d39a);color:#091020}.pill{border:1px solid #65542a;background:#2b2413;color:#f4d47b;border-radius:99px;padding:5px 9px;font-size:11px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:15px}.panel{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px}.label{font-size:12px;color:var(--muted);margin-bottom:7px}.value{font-size:clamp(20px,2.4vw,29px);font-weight:750;letter-spacing:-.5px}.muted{color:var(--muted)}.green{color:var(--green)}.red{color:var(--red)}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,.9fr);gap:15px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}h2{font-size:15px;margin:0}.instrument{display:flex;align-items:center;gap:10px}.coin{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#243657;color:#d6e0ff;font-weight:800}.quote{font-size:23px;font-weight:800;margin:12px 0}.chart{height:260px}.chart canvas{width:100%;height:100%;display:block}.range{display:flex;gap:4px}.range button{border:0;border-radius:7px;padding:6px 8px;color:var(--muted);background:transparent}.range button.active{background:#263451;color:var(--text)}
+.tradeform{display:grid;gap:13px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}input,select{width:100%;padding:11px;background:#0d1527;color:var(--text);border:1px solid var(--line);border-radius:9px}.switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.switch button{border:1px solid var(--line);border-radius:9px;padding:10px;background:#0d1527;color:var(--muted);font-weight:700}.switch .buy.active{background:#12352f;color:var(--green);border-color:#246a59}.switch .sell.active{background:#3b1c2b;color:var(--red);border-color:#7c3449}.summary{background:#0d1527;border-radius:9px;padding:12px;display:grid;gap:8px}.sumrow{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}.sumrow strong{color:var(--text)}.primary{border:0;border-radius:9px;padding:12px;background:var(--green);color:#071020;font-weight:800}.primary.sell{background:var(--red)}.note{font-size:11px;text-align:center;color:var(--muted)}.bottom{margin-top:15px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);font-size:12px}th{font-size:11px;color:var(--muted)}.empty{text-align:center;color:var(--muted);padding:25px}.close{border:1px solid #3a4a68;border-radius:7px;padding:6px 9px;background:#263451;color:var(--text)}.toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 16px;border:1px solid #344765;border-radius:10px;background:#1b2a43;max-width:90vw}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}@media(max-width:520px){.shell{padding:12px}.panel{padding:13px}.chart{height:220px}.pill{font-size:10px}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header><div class="brand"><div class="logo">N</div>northstar.trade <span class="pill">DEMO MODE</span></div><span class="muted">Multi-market workspace</span></header>
+<section class="metrics">
+<div class="panel"><div class="label">Demo balance</div><div class="value" id="balance">$10,000.00</div><div class="muted">Simulated funds only</div></div>
+<div class="panel"><div class="label">Equity</div><div class="value" id="equity">$10,000.00</div><div class="muted">Balance + open P/L</div></div>
+<div class="panel"><div class="label">Session P/L</div><div class="value green" id="pl">+$0.00</div><div class="muted">Closed demo positions</div></div>
+<div class="panel"><div class="label">Open positions</div><div class="value" id="count">0</div><div class="muted">Demo trades only</div></div>
+</section>
+<section class="layout">
+<div class="panel">
+<div class="head"><div class="instrument"><div class="coin" id="coin">₿</div><div><h2 id="instrumentName">Bitcoin / USD</h2><div class="muted" id="symbolCaption">BTCUSD · simulated quote</div></div></div><div class="range"><button class="active" data-range="1H">1H</button><button data-range="4H">4H</button><button data-range="1D">1D</button></div></div>
+<div class="quote" id="quote">$67,420.50 <span class="green" style="font-size:12px">DEMO</span></div><div class="chart"><canvas id="chart" aria-label="Illustrative demo price chart"></canvas></div><div class="muted">Illustrative prices only; not live market data.</div>
+</div>
+<aside class="panel"><div class="head"><h2>Place demo order</h2><span class="muted">Market order</span></div>
+<div class="tradeform">
+<div class="switch"><button id="buy" class="buy active">Buy / Long</button><button id="sell" class="sell">Sell / Short</button></div>
+<div><label for="asset">Instrument</label><select id="asset"><option value="BTCUSD">Bitcoin / USD (BTCUSD)</option><option value="XAUUSD">Gold / USD (XAUUSD)</option><option value="EURUSD">Euro / USD (EURUSD)</option><option value="AAPL">Apple Inc. (AAPL)</option></select></div>
+<div><label for="size">Position size (units)</label><input id="size" type="number" min="0.001" step="0.001" value="0.01"></div>
+<div><label for="stop">Stop loss (optional price)</label><input id="stop" type="number" min="0" step="0.01" placeholder="Stop price"></div>
+<div><label for="target">Take profit (optional price)</label><input id="target" type="number" min="0" step="0.01" placeholder="Target price"></div>
+<div class="summary"><div class="sumrow"><span>Estimated entry</span><strong id="entry"></strong></div><div class="sumrow"><span>Notional value</span><strong id="notional"></strong></div><div class="sumrow"><span>Mode</span><strong>Simulated only</strong></div></div>
+<button class="primary" id="submit">Place demo buy order</button><div class="note">No broker is connected. No real orders or funds are used.</div>
+</div></aside></section>
+<section class="panel bottom"><div class="head"><h2>Demo positions</h2><span class="muted" id="positionStatus">No active positions</span></div><div class="scroll"><table><thead><tr><th>Instrument</th><th>Side</th><th>Size</th><th>Entry</th><th>Stop loss</th><th>Take profit</th><th>Unrealized P/L</th><th>Action</th></tr></thead><tbody id="positions"><tr><td colspan="8" class="empty">No positions. Place a demo order to test.</td></tr></tbody></table></div></section>
+</main><div class="toast" id="toast" role="status"></div>
+<script>
+const prices={BTCUSD:67420.50,XAUUSD:2738.20,EURUSD:1.0842,AAPL:231.50};
+const details={BTCUSD:["Bitcoin / USD","₿"],XAUUSD:["Gold / USD","Au"],EURUSD:["Euro / USD","€"],AAPL:["Apple Inc.","A"]};
+let side="BUY",positions=[],balance=10000,sessionPL=0,range="1H";
+const $=id=>document.getElementById(id);
+const fmt=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+const asset=()=>$("asset").value;
+function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2600)}
+function updateSummary(){let p=prices[asset()],q=Math.max(0,Number($("size").value)||0);$("entry").textContent=fmt(p);$("notional").textContent=fmt(p*q);$("quote").innerHTML=fmt(p)+' <span class="green" style="font-size:12px">DEMO</span>';$("instrumentName").textContent=details[asset()][0];$("coin").textContent=details[asset()][1];$("symbolCaption").textContent=asset()+" · simulated quote";$("submit").textContent="Place demo "+side.toLowerCase()+" order";$("submit").className="primary"+(side==="SELL"?" sell":"")}
+function render(){let unreal=0;positions.forEach(p=>{p.pnl=(prices[p.asset]-p.entry)*p.size*(p.side==="BUY"?1:-1);unreal+=p.pnl});$("balance").textContent=fmt(balance);$("equity").textContent=fmt(balance+unreal);$("pl").textContent=(sessionPL>=0?"+":"")+fmt(sessionPL);$("pl").className="value "+(sessionPL>=0?"green":"red");$("count").textContent=positions.length;$("positionStatus").textContent=positions.length?positions.length+" active demo position(s)":"No active positions";
+$("positions").innerHTML=positions.length?positions.map(p=>`<tr><td><strong>${p.asset}</strong></td><td class="${p.side==="BUY"?"green":"red"}">${p.side}</td><td>${p.size}</td><td>${fmt(p.entry)}</td><td>${p.stop?fmt(p.stop):"—"}</td><td>${p.target?fmt(p.target):"—"}</td><td class="${p.pnl>=0?"green":"red"}">${p.pnl>=0?"+":""}${fmt(p.pnl)}</td><td><button class="close" data-close="${p.id}">Close</button></td></tr>`).join(""):'<tr><td colspan="8" class="empty">No positions. Place a demo order to test.</td></tr>';
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closePosition(Number(b.dataset.close))))}
+function place(){let size=Number($("size").value),stop=Number($("stop").value)||null,target=Number($("target").value)||null,price=prices[asset()];if(!Number.isFinite(size)||size<=0){toast("Enter a position size greater than zero.");return}if(stop&&((side==="BUY"&&stop>=price)||(side==="SELL"&&stop<=price))){toast("Stop loss is on the wrong side of entry.");return}if(target&&((side==="BUY"&&target<=price)||(side==="SELL"&&target>=price))){toast("Take profit is on the wrong side of entry.");return}positions.push({id:Date.now(),asset:asset(),side,size,entry:price,stop,target,pnl:0});render();toast("Demo order opened. No broker order was sent.")}
+function closePosition(id){let i=positions.findIndex(p=>p.id===id);if(i<0)return;let p=positions[i],pnl=(prices[p.asset]-p.entry)*p.size*(p.side==="BUY"?1:-1);balance+=pnl;sessionPL+=pnl;positions.splice(i,1);render();toast("Demo position closed: "+(pnl>=0?"+":"")+fmt(pnl))}
+$("buy").onclick=()=>{side="BUY";$("buy").className="buy active";$("sell").className="sell";updateSummary()};
+$("sell").onclick=()=>{side="SELL";$("sell").className="sell active";$("buy").className="buy";updateSummary()};
+$("asset").onchange=updateSummary;$("size").oninput=updateSummary;$("submit").onclick=place;
+document.querySelectorAll("[data-range]").forEach(b=>b.onclick=()=>{range=b.dataset.range;document.querySelectorAll("[data-range]").forEach(x=>x.classList.toggle("active",x===b));drawChart()});
+function drawChart(){let c=$("chart"),r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;let x=c.getContext("2d");x.scale(d,d);let w=r.width,h=r.height;x.clearRect(0,0,w,h);x.strokeStyle="#26334d";for(let i=1;i<5;i++){x.beginPath();x.moveTo(0,h*i/5);x.lineTo(w,h*i/5);x.stroke()}let seed=range==="1H"?31:range==="4H"?47:83,v=.52,pts=[];for(let i=0;i<70;i++){seed=(seed*9301+49297)%233280;v=Math.max(.12,Math.min(.9,v+(seed/233280-.49)*.12));pts.push(v)}x.beginPath();pts.forEach((p,i)=>{let xx=i*w/(pts.length-1),yy=h*(1-p);i?x.lineTo(xx,yy):x.moveTo(xx,yy)});x.strokeStyle="#7b9cff";x.lineWidth=2;x.stroke();let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,"rgba(123,156,255,.2)");g.addColorStop(1,"rgba(123,156,255,0)");x.lineTo(w,h);x.lineTo(0,h);x.closePath();x.fillStyle=g;x.fill()}
+setInterval(()=>{for(let k in prices){let step=k==="EURUSD"?.00015:k==="XAUUSD"?0.45:k==="AAPL"?0.25:18;prices[k]+=(Math.random()-.49)*step}updateSummary();render();drawChart()},5000);window.addEventListener("resize",drawChart);updateSummary();render();drawChart();
+</script></body></html>
